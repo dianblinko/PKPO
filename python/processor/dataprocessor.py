@@ -16,9 +16,9 @@ class DataProcessor(ABC):
         # общие атрибуты для классов обработчиков данных
         self._datasource = datasource   # путь к источнику данных
         self._dataset = None            # входной набор данных
-        self.result = None              # выходной набор данных (результат обработки)
-        self.result2 = None
-        self.result3 = None
+        self.result_country = None              # выходной набор данных (результат обработки)
+        self.result_year = None
+        self.result_age = None
 
     # Метод, инициализирующий источник данных
     # Все методы, помеченные декоратором @abstractmethod, ОБЯЗАТЕЛЬНЫ для переобределения
@@ -46,6 +46,10 @@ class DataProcessor(ABC):
         НАПРИМЕР, если ваш источник данных это не файл, а база данных, тогда метод сортировки будет не нужен,
         т.к. сортировку можно сделать при выполнении SQL-запроса типа SELECT ... ORDER BY...
     """
+    def calculate_suicides_100K(self, df) -> pandas.DataFrame:
+        df["Suicides/100KPopulation"] = df.suicides_no / df.population * 100000
+        # df = df.assign(Suicides/100KPopulation=)
+        return df
 
     # Проверить работоспособность очистки данных
     def clear_data(self, df) -> pandas.DataFrame:
@@ -54,28 +58,33 @@ class DataProcessor(ABC):
             df.drop(df.loc[df[col_name].isna(), [col_name]].index, inplace=True)
         return df
 
-    def process_first_table(self, df) -> pandas.DataFrame:
+    def encoding_sex(self, df):
+        df.loc[df['sex'] == "male", 'sex'] = 0
+        df.loc[df['sex'] == "female", 'sex'] = 1
+        return df
+
+    def process_country_table(self, df) -> pandas.DataFrame:
         df1 = df.groupby(["country", "sex"]).agg({'gdp_per_capita': 'mean', 'suicides_no': 'mean', 'population': "mean"})
-        df1["Suicides/100KPopulation"] = df1.suicides_no / df1.population * 100000
+        df1 = self.calculate_suicides_100K(df1)
         df1 = df1.sort_values(by=['Suicides/100KPopulation'], ascending=False).reset_index()
         df1["Level_gdp"] = 0
-        # ????????????????????????????
-        # Должна ли загружаться таблица индексов, где 1 - Высокий, 2 - Средний, 3 - Низкий, для ВВП при каждой обработке данных, или достаточно заранее загрузить ее в SQL????????
-        # ????????????????????????????
         for row in df1.index:
             df1['Level_gdp'][row] = 1 if df1['gdp_per_capita'][row] > 12616 else 3 if df1['gdp_per_capita'][row] < 1035 else 2
+        df1 = self.encoding_sex(df1)
         return df1
 
-    def process_second_table(self, df) -> pandas.DataFrame:
+    def process_year_table(self, df) -> pandas.DataFrame:
         df2 = df.groupby(["year", "sex"]).agg({'suicides_no': 'sum', 'population': "sum"})
-        df2["Suicides/100KPopulation"] = df2.suicides_no / df2.population * 100000
+        df2 = self.calculate_suicides_100K(df2)
         df2 = df2.sort_values(by=['year', 'sex'], ascending=False).reset_index()
+        df2 = self.encoding_sex(df2)
         return df2
 
-    def process_third_table(self, df) -> pandas.DataFrame:
+    def process_age_table(self, df) -> pandas.DataFrame:
         df3 = df.groupby(["age", "sex"]).agg({'suicides_no': 'sum', 'population': "sum"})
-        df3["Suicides/100KPopulation"] = df3.suicides_no / df3.population * 100000
+        df3 = self.calculate_suicides_100K(df3)
         df3 = df3.sort_values(by=['age', 'sex'], ascending=False) .reset_index()
+        df3 = self.encoding_sex(df3)
         return df3
 
 # Реализация класса-обработчика csv-файлов
@@ -104,12 +113,12 @@ class CsvDataProcessor(DataProcessor):
 
     def run(self):
         self._dataset = self.clear_data(self._dataset)
-        self.result = self.process_first_table(self._dataset)
-        self.result2 = self.process_second_table(self._dataset)
-        self.result3 = self.process_third_table(self._dataset)
+        self.result_country = self.process_country_table(self._dataset)
+        self.result_year = self.process_year_table(self._dataset)
+        self.result_age = self.process_age_table(self._dataset)
 
     def print_result(self):
-        print(f'Running CSV-file processor!\n', self.result, f'\n', self.result2, f'\n', self.result3)
+        print(f'Running CSV-file processor!\n', self.result_country, f'\n', self.result_year, f'\n', self.result_age)
 
 
 # Реализация класса-обработчика txt-файлов
@@ -128,10 +137,10 @@ class TxtDataProcessor(DataProcessor):
 
     def run(self):
         self._dataset = self.clear_data(self._dataset)
-        self.result = self.process_first_table(self._dataset)
-        self.result2 = self.process_second_table(self._dataset)
-        self.result3 = self.process_third_table(self._dataset)
+        self.result_country = self.process_country_table(self._dataset)
+        self.result_year = self.process_year_table(self._dataset)
+        self.result_age = self.process_age_table(self._dataset)
 
 
     def print_result(self):
-        print(f'Running TXT-file processor!\n', self.result, f'\n', self.result2, f'\n', self.result3)
+        print(f'Running TXT-file processor!\n', self.result_country, f'\n', self.result_year, f'\n', self.result_age)
