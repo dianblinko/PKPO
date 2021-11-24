@@ -70,6 +70,7 @@ class DataProcessor(ABC):
         df1["Level_gdp"] = 0
         for row in df1.index:
             df1['Level_gdp'][row] = 1 if df1['gdp_per_capita'][row] > 12616 else 3 if df1['gdp_per_capita'][row] < 1035 else 2
+        feature_cols = list(df1.columns)
         df1 = self.encoding_sex(df1)
         return df1
 

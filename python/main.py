@@ -1,6 +1,7 @@
 import os
 from processor.dataprocessorfactory import *
-
+from repository.connectorfactory import *       # подключаем фабрику коннекторов к БД
+from repository.sql_api import *                # подключаем API для работы с БД
 """
     Пример простейшей функции, которая запускает обработчик данных и выводит результат обработки (возвращает None).
     
@@ -10,7 +11,8 @@ from processor.dataprocessorfactory import *
     Основное условие для расширения - это сохранение формата выходных данных 
     (в данном примере результатом обработки является тип pandas.DataFrame)
 """
-
+DATASOURCE = "suicide.csv"
+DB_URL = 'sqlite:///test.db'
 # В зависимости от расширения файла вызываем соответствующий фабричный метод
 def init_processor(source: str) -> DataProcessor:
     proc = None
@@ -21,12 +23,23 @@ def init_processor(source: str) -> DataProcessor:
     return proc
 
 # Запуск обработки
-def run_processor(proc: DataProcessor) -> None:
+def run_processor(proc: DataProcessor) -> DataFrame:
     proc.run()
     proc.print_result()
+    return proc.result_country
 
 
 if __name__ == '__main__':
-    proc = init_processor("suicide.txt")
+    result = None
+    # proc = init_processor("suicide.txt")
+    proc = init_processor(DATASOURCE)
     if proc is not None:
-        run_processor(proc)
+        result = run_processor(proc)
+    # Работа с БД
+    if result is not None:
+        db_connector = SQLStoreConnectorFactory().get_connector(DB_URL)   # получаем объект соединения
+        insert_into_source_files(db_connector, DATASOURCE)                # сохраняем в БД информацию о файле с набором данных
+        print(select_all_from_source_files(db_connector))                 # вывод списка всеъ обработанных файлов
+        insert_rows_into_processed_data(db_connector, result.iloc[:5], DATASOURCE)     # записываем в БД 5 первых строк результата
+        # Завершаем работу с БД
+        db_connector.close()
