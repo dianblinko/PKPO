@@ -59,8 +59,8 @@ class DataProcessor(ABC):
         return df
 
     def encoding_sex(self, df):
-        df.loc[df['sex'] == "male", 'sex'] = 0
-        df.loc[df['sex'] == "female", 'sex'] = 1
+        df.loc[df['sex'] == "male", 'sex'] = 1
+        df.loc[df['sex'] == "female", 'sex'] = 2
         return df
 
     def process_country_table(self, df) -> pandas.DataFrame:
