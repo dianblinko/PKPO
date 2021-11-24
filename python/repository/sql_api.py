@@ -32,14 +32,24 @@ def insert_into_source_files(connector: StoreConnector, filename: str):
 
 
 # Вставка строк из DataFrame в БД
-def insert_rows_into_processed_data(connector: StoreConnector, dataframe: DataFrame, filename: str):
-    rows = dataframe.to_dict('records')
+def insert_rows_into_processed_data(connector: StoreConnector, list_result: list, filename: str):
     connector.start_transaction()
     foreign_key = connector.execute(f'SELECT MAX(id) FROM source_files').lastrowid  # Костыль ссаный
-    for row in rows:
+    row_country = list_result[0].to_dict('records')
+    row_year = list_result[1].to_dict('records')
+    row_age = list_result[2].to_dict('records')
+    for row in row_country:
         connector.execute(f'INSERT INTO suicides_country (country, sex, gdp_per_capita, suicides_no, population, '
                           f'Suicides_on_100KPopulation, Level_gdp, source_file) VALUES (\'{row["country"]}\', '
                           f'\'{row["sex"]}\', \'{row["gdp_per_capita"]}\', \'{row["suicides_no"]}\','
                           f'\'{row["population"]}\', \'{row["Suicides/100KPopulation"]}\', \'{row["Level_gdp"]}\', '
                           f'\'{foreign_key}\')')
+    for row in row_year:
+        connector.execute(f'INSERT INTO suicides_year (year, sex, suicides_no, population, Suicides_on_100KPopulation, '
+                          f'source_file) VALUES (\'{row["year"]}\', \'{row["sex"]}\',  \'{row["suicides_no"]}\','
+                          f'\'{row["population"]}\', \'{row["Suicides/100KPopulation"]}\', \'{foreign_key}\')')
+    for row in row_age:
+        connector.execute(f'INSERT INTO suicides_age (age, sex, suicides_no, population, Suicides_on_100KPopulation, '
+                          f'source_file) VALUES (\'{row["age"]}\', \'{row["sex"]}\',  \'{row["suicides_no"]}\','
+                          f'\'{row["population"]}\', \'{row["Suicides/100KPopulation"]}\', \'{foreign_key}\')')
     connector.end_transaction()

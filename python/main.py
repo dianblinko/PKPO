@@ -41,6 +41,6 @@ if __name__ == '__main__':
         db_connector = SQLStoreConnectorFactory().get_connector(DB_URL)   # получаем объект соединения
         insert_into_source_files(db_connector, DATASOURCE)                # сохраняем в БД информацию о файле с набором данных
         print(select_all_from_source_files(db_connector))                 # вывод списка всеъ обработанных файлов
-        insert_rows_into_processed_data(db_connector, list_result[0].iloc[:5], DATASOURCE)     # записываем в БД 5 первых строк результата
+        insert_rows_into_processed_data(db_connector, list_result, DATASOURCE)     # записываем в БД 5 первых строк результата
         # Завершаем работу с БД
         db_connector.close()
