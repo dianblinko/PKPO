@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    
+    <article>
+		<section>
+			<p>
+			Этот сайт - командный проект студентов УГАТУ, ФИРТ, ПРО-324. Чепуров Артём, Ермолин Николай, Нафиков Владислав. 
+			Цель проекта - приобретение практических навыков проектирования и конструирования ПО.
+			Команда выражает благодароность преподавателям Сметаниной Ольге Николаевне и Юдинцеву Богдану Сергеевичу за теоритический материал и наставления.
+			</p>
+		</section>
+        <section>
+            {% for image in imgs %}
+                <figure><img src="/static/images/{{image}}" alt=""></figure>
+				<img src="https://st4.depositphotos.com/1229718/19924/i/600/depositphotos_199243260-stock-photo-psychology-of-suicide-and-suicidal.jpg">
+            {% endfor %}
+        </section>
+    </article>
+
+{% endblock %}

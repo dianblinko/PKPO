@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <article>
+            <p align="center">Кол-во суицидов и население взяты как суммарное по всем исследуемым странам для данного года и данного пола.</p>
+    </article>
+	<table border = "1">
+				<tr>
+					<th>id</th><th>Год</th><th>Пол</th><th>Кол-во суицидов</th><th>Население</th><th>Кол-во суицидов на 100К населения</th><th>Sourse file</th>
+				</tr>
+				{% for row in processed_files %}
+					<tr>
+						<td>{{row[0]}}</td><td>{{row[1]}}</td><td>{{row[2]}}</td><td>{{row[3]}}</td><td>{{row[4]}}</td><td>{{row[5]}}</td><td>{{row[6]}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+
+{% endblock %}

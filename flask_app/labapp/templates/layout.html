@@ -1,0 +1,51 @@
+<html>
+
+<head>
+		<meta charset="utf-8">
+		<title>{{title}}</title>
+		<link rel="stylesheet" href="/static/stylesheets/styles.css">
+		<script type="text/javascript" src="/static/javascripts/jquery-3.6.0.min.js"></script>
+</head>
+		<body>
+			<div class="wrapper">
+				<header>
+					
+					</form>
+					<div class="heading">
+						<h1 id="headname">{{pname}}</h1>
+					</div>
+				</header>
+				{% if navmenu %}
+					<nav>
+						<ul class="top-menu">
+							{% for item in navmenu %}
+								<li><a href="{{item.addr}}">{{item.name}}</a></li>
+							{% endfor %}
+						</ul>
+					</nav>
+				{% endif %}
+				<main id="{{pname}}">
+					{% block content %}{% endblock %}
+				</main>
+			</div>
+			<footer>
+				<div class="footer">
+					<div id="social">
+						<h3>SOCIAL NETWORKS</h3>
+						<a href="https://vk.com/chepurov_artem" class="social-icon twitter"></a>
+						<a href="https://vk.com/ermolin.nikolay" class="social-icon twitter"></a>
+						<a href="https://vk.com/id128076196" class="social-icon twitter"></a>
+					</div>
+					<div id="footer-logo">
+						<h2>Единый общероссийский телефон доверия для детей, подростков и их родителей:
+						</h2>
+						<h2>
+						8-800-2000-122
+						</h2>
+					</div>
+				</div>
+			</footer>
+			<script type="text/javascript" src="/static/javascripts/topmenu.js"></script>
+			<script type="text/javascript" src="/static/javascripts/jqfunc.js"></script>
+		</body>
+</html>
