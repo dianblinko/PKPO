@@ -1,0 +1,25 @@
+﻿country,year,sex,age,suicides_no,population,gdp_per_capita
+Albania,1987,male,15-24 years,21,312900,
+Albania,1987,male,35-54 years,16,308000,
+Albania,1987,female,15-24 years,14,289700,
+Albania,1987,male,75+ years,1,21800,
+Albania,1987,male,25-34 years,9,274300,
+Albania,1987,female,75+ years,1,35600,
+Albania,1987,female,35-54 years,6,278800,
+Albania,1987,female,25-34 years,4,257200,
+Albania,1987,male,55-74 years,1,137500,
+Albania,1987,female,5-14 years,0,311000,
+Albania,1987,female,55-74 years,0,144600,
+Albania,1987,male,5-14 years,0,338200,
+Antigua and Barbuda,1985,female,15-24 years,,7709,3850
+Antigua and Barbuda,1985,female,25-34 years,0,6344,3850
+Antigua and Barbuda,1985,female,35-54 years,0,6173,3850
+Antigua and Barbuda,1985,female,5-14 years,0,7339,3850
+Antigua and Barbuda,1985,female,55-74 years,0,3778,3850
+Antigua and Barbuda,1985,female,75+ years,0,949,3850
+Antigua and Barbuda,1985,male,15-24 years,,7667,3850
+Antigua and Barbuda,1985,male,25-34 years,0,6194,3850
+Antigua and Barbuda,1985,male,35-54 years,0,5970,3850
+Antigua and Barbuda,1985,male,5-14 years,0,7304,3850
+Antigua and Barbuda,1985,male,55-74 years,0,2723,3850
+Antigua and Barbuda,1985,male,75+ years,0,424,3850

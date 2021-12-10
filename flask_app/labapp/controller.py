@@ -30,10 +30,6 @@ navmenu = [
         'name': 'Suicides age',
         'addr': '/suicides_age'
     },
-    {
-        'name': 'Contact us',
-        'addr': '/contact'
-    },
 ]
 
 # Получаем список обработанных файлов

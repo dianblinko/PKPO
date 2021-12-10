@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from .connector import StoreConnector
 from .mysqlconnector import MySQLStoreConnector
 from .sqliteconnector import SQLiteStoreConnector
+import os.path
 
 """
     В данном модуле реализуется фабрика для коннекторов к хранилищу данных
@@ -33,6 +34,10 @@ class StoreConnectorFactory(ABC):
 
 class SQLStoreConnectorFactory(StoreConnectorFactory):
     def get_connector(self, datastore):
+        file_path = datastore[10:]
+        if os.path.exists(file_path) == False:
+            print("База данных отсутсвует")
+            return None
         if datastore.startswith("sqlite:///"):
             self.instance = SQLiteStoreConnector(datastore)
             if self.instance.connect():

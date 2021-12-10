@@ -72,7 +72,9 @@ class DataProcessor(ABC):
             df1['Level_gdp'][row] = 1 if df1['gdp_per_capita'][row] > 12616 else 3 if df1['gdp_per_capita'][row] < 1035 else 2
         feature_cols = list(df1.columns)
         df1 = self.encoding_sex(df1)
-        df1 = df1.round({'gdp_per_capita': 2, 'suicides_no': 2, 'population': 2, 'Suicides/100KPopulation': 3})
+        df1["population"] = df1["population"]/1000000
+        df1["gdp_per_capita"] = df1["gdp_per_capita"]/1000
+        df1 = df1.round({'gdp_per_capita': 2, 'suicides_no': 2, 'population': 3, 'Suicides/100KPopulation': 3})
         return df1
 
     def process_year_table(self, df) -> pandas.DataFrame:
@@ -80,7 +82,9 @@ class DataProcessor(ABC):
         df2 = self.calculate_suicides_100K(df2)
         df2 = df2.sort_values(by=['year', 'sex'], ascending=False).reset_index()
         df2 = self.encoding_sex(df2)
-        df2 = df2.round({ 'Suicides/100KPopulation': 3})
+        df2["population"] = df2["population"]/1000000
+        df2["suicides_no"] = df2["suicides_no"]/1000
+        df2 = df2.round({ 'Suicides/100KPopulation': 3, 'population': 3, 'suicides_no': 3})
         return df2
 
     def process_age_table(self, df) -> pandas.DataFrame:
@@ -88,7 +92,9 @@ class DataProcessor(ABC):
         df3 = self.calculate_suicides_100K(df3)
         df3 = df3.sort_values(by=['age', 'sex'], ascending=False) .reset_index()
         df3 = self.encoding_sex(df3)
-        df3 = df3.round({ 'Suicides/100KPopulation': 3})
+        df3["suicides_no"] = df3["suicides_no"]/1000
+        df3["population"] = df3["population"]/1000000
+        df3 = df3.round({ 'Suicides/100KPopulation': 3, 'population': 3, 'suicides_no': 3})
         return df3
 
 # Реализация класса-обработчика csv-файлов
